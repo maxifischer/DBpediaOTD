@@ -1,0 +1,34 @@
+select distinct ?uri ?name ?date ?thumbnail GROUP_CONCAT(distinct ?genre; SEPARATOR =", ") AS ?genres SAMPLE(?a) AS ?author WHERE
+    {
+    {
+    ?uri dbo:firstPublicationDate ?date
+    FILTER (( datatype(?date) = xsd:date ) ||
+         ( datatype(?date) = xsd:dateTime ))
+    FILTER (regex(str(?date), datum) ).
+    }
+    UNION
+    {
+    ?uri dbp:published ?date
+    FILTER (( datatype(?date) = xsd:date ) ||
+         ( datatype(?date) = xsd:dateTime ))
+    FILTER (regex(str(?date), datum) ).
+    }
+    UNION
+    {
+    ?uri dbp:pubDate ?date
+    FILTER (( datatype(?date) = xsd:date ) ||
+         ( datatype(?date) = xsd:dateTime ))
+    FILTER (regex(str(?date), datum) ).
+    }
+
+    ?uri rdfs:label ?name
+	FILTER(langMatches(lang(?name), "EN"))
+	FILTER(!regex(str(?name), "List")).
+
+    ?uri rdf:type ?isKindOf
+   	FILTER(regex(str(?isKindOf), "WrittenWork")).
+
+    ?uri dbp:author ?a.
+    OPTIONAL {?uri dbo:thumbnail ?thumbnail }.
+    OPTIONAL {?uri dbp:genre ?genre}
+ }

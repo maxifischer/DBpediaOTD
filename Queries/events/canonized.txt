@@ -1,0 +1,25 @@
+SELECT DISTINCT ?uri ?name ?info ?thumbnail ?date count(?otherPage) AS ?indegree SAMPLE(?by) as ?by WHERE
+{
+    {
+    ?uri dbo:canonizedDate ?date
+	FILTER (( datatype(?date) = xsd:date ) ||
+		 ( datatype(?date) = xsd:dateTime ))
+	FILTER (regex(str(?date), datum) ).
+    }
+    UNION
+    {
+    ?uri dbp:canonizedDate ?date
+	FILTER (( datatype(?date) = xsd:date ) ||
+		 ( datatype(?date) = xsd:dateTime ))
+	FILTER (regex(str(?date), datum) ).
+    }
+
+    ?uri rdfs:label ?name
+	FILTER(langMatches(lang(?name), "EN")).
+
+    ?otherPage ?property ?uri.
+    OPTIONAL {?uri dbo:thumbnail ?thumbnail }.
+    OPTIONAL {?uri dbp:canonizedBy ?by}.
+    ?uri dbp:shortDescription ?info.
+
+} ORDER BY DESC(?indegree)

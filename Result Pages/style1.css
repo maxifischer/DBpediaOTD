@@ -1,0 +1,122 @@
+body {
+	background-color: white;
+	font-family: Arial, Helvetica, sans-serif;
+	margin-left: 50px;
+	text-align: center;
+	width: 80%;
+}
+
+div.head{
+	height: 180px;
+}
+
+div.head .text{
+	float: left;
+	text-align: left;
+}
+
+div.head .logos{
+	float: right;
+}
+
+div.head .logos img{
+	width: auto;
+	height: auto;
+	max-height: 200px;
+	max-width: 200px;
+	margin-left: 30px;
+	margin-top: 30px;
+}
+
+
+div.introduction{
+	min-height: 150px;
+	overflow: hidden;
+}
+div.introduction .anni{
+	float: left;
+	text-align: left;
+	width: 80%;
+}
+
+div.introduction .anker{
+	float: right;
+	text-align: left;
+}
+
+table{
+	border-collapse: collapse;
+	width: 100%;
+	border: 2px solid #C0C0C0;
+}
+th { 
+	width: 50%;
+	background-color: #C0C0C0;
+	font-size: 16px;
+	height: 30px;
+	font-style: italic;
+	text-align: center;
+	border: 2px solid #C0C0C0;
+	
+}
+td{
+	text-align: left;
+	vertical-align: top;
+	border: 2px solid #C0C0C0;
+}
+
+t{
+	font-size: 16px;
+	font-style: italic;
+
+}
+
+div.wrap {
+	display: table;
+	width: 90%;
+	border-spacing: 0;
+	margin-bottom: 30px;
+	margin-top: 30px;
+	margin-right: 30px;
+	margin-left: 10px;
+
+}
+	
+div.thumbnail{
+  	display: table-cell;
+	float: right;
+} 
+div.thumbnail img{
+	width: auto;
+	height: auto;
+	max-height: 100px;
+	max-width: 100px;
+}
+div.caption {
+  	display: table-cell;
+	vertical-align: middle;
+	margin-left: 10px;
+}
+div.highlightedCaption{
+	font-weight: bold;
+	display: table-cell;
+	vertical-align: middle;
+	margin-left: 10px;
+}
+
+a.links{
+	font-size: 20px;	
+}
+a.sublinks{
+	font-size: 16px;
+	margin-left: 20px;
+}
+div.top {
+	text-align: center;
+	}
+
+a {
+	color: #EE7600;
+	text-decoration: none;
+}
+

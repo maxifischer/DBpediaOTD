@@ -1,0 +1,14 @@
+SELECT DISTINCT ?date (GROUP_CONCAT (DISTINCT CONCAT("<a href=\"", ?uri, "\"> ",?name, "</a>"); SEPARATOR=', ') AS ?info) count(distinct ?otherPage) AS ?indegree WHERE    
+{
+
+    ?uri dbp:adoption ?date
+    FILTER (( datatype(?date) = xsd:date ) ||
+         ( datatype(?date) = xsd:dateTime ))
+    FILTER (regex(str(?date), datum) ) .
+
+    ?uri rdfs:label ?name
+	FILTER(langMatches(lang(?name), "EN")).
+
+    ?otherPage ?property ?uri 
+
+} GROUP BY (?date) ORDER BY DESC(?indegree)

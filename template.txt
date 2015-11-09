@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+    <title> DBpedia of the DATE </title>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" type="text/css" href="style1.css">
+    </head>
+
+    <body>
+    <div class="head">
+		<a name="top"></a>
+		<div class="text">
+			<h2>DBpedia on this day</h2>
+			<h1>DATE</h1>
+			<p>ENTRY</p>
+		</div>
+		<div class="logos">
+			<img src="DBpediaLogo.png">
+			<img src="hpi_logo.png">
+		</div>
+	</div>
+
+	<hr></hr>		
+
+	<div class="introduction">
+		<div class="anni">
+			<a name="anni"></a>
+			<h3 align="left">Anniversaries:</h3>
+			ANNIVERSARIES
+		</div>
+        <div class="anker">
+			<a class="links" href="#person">Persons</a><br>
+			<a class="sublinks" href="#artists">Artists</a><br>
+			<a class="sublinks" href="#athletes">Sportsman</a><br>
+			<a class="sublinks" href="#politicians">Politicians</a><br>
+			<a class="sublinks" href="#scientists">Scientists</a><br>
+			<a class="sublinks" href="#other">Other</a><br>
+			<a class="links" href="#events">Events</a><br>
+		</div>
+	</div>
+	<hr></hr>
+	<div class="tables">
+		<a name="person"> </a><br>
+		<h3>Persons...</h3><br>
+			<table>
+        		<tr>
+            		<th>... who were born today</th>
+            		<th>... who died today</th>
+        		</tr>
+        	<div class="artists">
+					<tr> 
+						<td colspan="2"><t>Artists and performers:<a name="artists"> </a></t></td> 
+					</tr>
+		        	<tr>
+						<td>ARTISTSB</td>
+						<td>ARTISTSD</td>
+					</tr>
+			</div>
+
+			<div class="athletes">
+				
+					<tr> 
+						<td colspan="2"><t>Related to sports:<a name="athletes"> </a></t></td> 
+					</tr>
+	        		<tr>
+						<td>ATHLETESB</td>
+						<td>ATHLETESD</td>
+					</tr>
+			</div>
+
+			<div class="politicians">
+					<tr> 
+						<td colspan="2"><t>Related to politics and economics:<a name="politicians"> </a></t></td> 
+					</tr>				
+	        		<tr>
+						<td>POLITICIANSB</td>
+						<td>POLITICIANSD</td>
+					</tr>
+			</div>
+
+			<div class="scientists">
+				<tr> 
+					<td colspan="2"><t>Scientists:</t><a name="scientists"> </a></td> 
+				</tr>
+	        	<tr>
+					<td>SCIENTISTSB</td>
+					<td>SCIENTISTSD</td>
+				</tr>
+			</div>
+
+			<div class="other">
+				<tr> 
+					<td colspan="2"><t>Other:<a name="other"></a></t></td> 
+				</tr>
+	        	<tr>
+					<td>OTHERB</td>
+					<td>OTHERD</td>
+				</tr>
+			</div>
+		</table>
+
+		<a href="#top">top</a>
+		<hr>
+
+			<h3>Events and Publications </h3>
+	        <table>
+	        	<div class="events">
+					<a name="events"></a>
+		        	<tr>
+		            	<th>General Events</th>
+		            	<th>Published musical and written Work and Movies</th>
+		        	</tr>
+		        	<tr>
+						<td>EVENTS</td>
+						<td>PUBLICATIONS</td>
+					</tr>
+				</div>
+		</table>
+	</div>
+	<a href="#top">top</a>
+	</body>
+</html>
+

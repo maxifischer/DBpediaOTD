@@ -1,0 +1,13 @@
+SELECT DISTINCT ?uri ?name SAMPLE(?date) AS ?date COUNT(DISTINCT ?otherPage) AS ?indegree WHERE
+{
+    ?uri dbp:openingDate ?date
+	FILTER (( datatype(?date) = xsd:date ) ||
+       ( datatype(?date) = xsd:dateTime )).
+    FILTER (regex(str(?date), datum) ) .
+
+    ?uri rdfs:label ?name
+	FILTER(langMatches(lang(?name), "EN")).
+
+	?otherPage ?property ?uri.
+
+} ORDER BY DESC(?indegree)

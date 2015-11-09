@@ -1,0 +1,15 @@
+SELECT DISTINCT ?uri ?name COUNT(DISTINCT ?otherPage) AS ?indegree ?date ?thumbnail SAMPLE(?discoverer) AS ?discoverer WHERE    
+{
+    ?uri dbp:discovered ?date
+    FILTER (( datatype(?date) = xsd:date ) ||
+         ( datatype(?date) = xsd:dateTime ))
+    FILTER (regex(str(?date), datum) ) .
+
+    ?uri foaf:name ?name
+	FILTER(langMatches(lang(?name), "EN")).
+
+    OPTIONAL {?uri dbo:thumbnail ?thumbnail }.
+    OPTIONAL {?uri dbo:discoverer ?discoverer}.
+    ?otherPage ?property ?uri 
+
+} ORDER BY DESC(?indegree) LIMIT 6

@@ -1,0 +1,15 @@
+SELECT DISTINCT ?uri ?name SAMPLE(?date) AS ?date COUNT(DISTINCT ?otherPage) AS ?indegree GROUP_CONCAT(DISTINCT ?by; SEPARATOR = ", ") AS ?by SAMPLE(?height) AS ?height WHERE
+{
+   ?uri dbp:firstAscent ?date
+	FILTER (( datatype(?date) = xsd:date ) ||
+		( datatype(?date) = xsd:dateTime ))
+    FILTER (regex(str(?date), datum) ) .
+
+    ?uri rdfs:label ?name
+	FILTER(langMatches(lang(?name), "EN")).
+    
+    ?otherPage ?property ?uri.
+    OPTIONAL { ?uri dbo:firstAscentPerson ?by }
+    OPTIONAL { ?uri dbo:elevation ?height }
+
+} ORDER BY DESC(?indegree)
