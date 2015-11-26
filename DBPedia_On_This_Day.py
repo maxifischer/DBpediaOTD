@@ -1,4 +1,4 @@
-from SPARQLWrapper import SPARQLWrapper, JSON
+from SPARQLWrapper import SPARQLWrapper, SPARQLWrapper2, JSON
 from mergesort import mergesort
 from time import localtime
 from enum import Enum
@@ -11,6 +11,7 @@ import copy
 #the year, the information, an additional thumbnail and the pagerank for pages that do not use the indegree for ranking
 #the pagerank-attribute is only needed as long as it has to be extracted from a seperate file and not from DBpedia itself
 #we can also save the final format that the entry will have (highlighted or not)
+
 class entry():
 
     def __init__(self, year, info, thumbnail):
@@ -45,21 +46,42 @@ class entry():
         return self.pagerank
 
 #load the dictionary for pageranks
-pageranks = {}
-with codecs.open("pagerank_scores_en_2014.txt", "r", "utf-8") as myfile:
-    for line in myfile:
-        split = line.split(" ")
-        pagerank = split[2].split("\"")[1]
-        dicEntry = {split[0]:float(pagerank)}
-        pageranks.update(dicEntry)
+#pageranks = {}
+#with codecs.open("pagerank_scores_en_2014.txt", "r", "utf-8") as myfile:
+#    for line in myfile:
+#        split = line.split(" ")
+#        pagerank = split[2].split("\"")[1]
+#        dicEntry = {split[0]:float(pagerank)}
+#        pageranks.update(dicEntry)
 
-print ("Page rank loaded.")
+#print ("Page rank loaded.")
 
 #set parameters for this execution    
-sparql = SPARQLWrapper("http://dbpedia.org/sparql")
+sparql_old = SPARQLWrapper("http://dbpedia.org/sparql")
+sparql = SPARQLWrapper2("http://dbpedia.org/sparql")
+sparql2 = SPARQLWrapper2("http://dbpedia.org/sparql")
 numberOfResults = 15
 time = localtime()
-year, month, day = time[0:3]
+#change the date here
+#year = 2015
+#month_day = {1: 31, 2: 29, 3: 31, 4: 30, 5: 31, 6: 30, 7: 31, 8: 31, 9: 30, 10: 31, 11: 30, 12: 31}
+#for i in range(1, 13):
+#   month = i
+#   for j in range(1, month_day[i]):
+#       day = j
+#       date = year, month, day
+#       main(date)
+year, month, day = 2015, 11, 23 #time[0:3]
+
+#create the Date in the format "-Month-Day" to query from DBpedia
+if(len(str(month)) == 1):
+    date = "\"-0" + str(month)
+else:
+    date = "\"-" + str(month)
+if(len(str(day)) == 1):
+    date += "-0" + str(day) + "\""
+else:
+    date += "-" + str(day) + "\""
 
 anniversaries = [entry(0, "", "")]
 validAnniversaries = [1000, 500, 250, 200, 150, 100, 75, 50, 25, 10]
@@ -71,19 +93,7 @@ eventQueries = ["admitted", "signed", "battles", "battles2", "beatified", "build
 workQueries = ["movie", "musicalWork", "writtenWork", "game"]
 
 #"Month" and "Day" transfer the date to natural text
-class Month(Enum):
-    January = 1
-    Februar = 2
-    March = 3
-    April = 4
-    May = 5
-    June = 6
-    July = 7
-    August = 8
-    September = 9
-    October = 10
-    November = 11
-    December = 12
+months = ["January", "Februar", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
    
 def Day(day):
     if(str(day).endswith("1") and str(day) != "11"):
@@ -114,22 +124,25 @@ def calcThreshold(typ):
 #query a Result in JSON-Format
 #these results are already ranked by InDegree
 def queryResults(query, typ):
+    results = querying(query)
     print ("Querying, ", typ, "...")
-    sparql.setReturnFormat(JSON)
-    sparql.setQuery(query)
-    results = sparql.queryAndConvert()
-    
     if typ in pagerankQueries:
         return rankByPagerank(results, typ)
     else:
         return rankByIndegree(results, typ)     
+
+def querying(query):
+    sparql.setQuery(query)
+    sparql.setReturnFormat(JSON)    
+    results = sparql.query()
+    return results
 
 #this prepares the result set if it is ranked by inDegree
 def rankByIndegree(results, typ):
     entries = []
     count = 0
     
-    for res in results["results"]["bindings"]:
+    for res in results.bindings:
         count += 1
         #create the information-string depending on the type
         info = getattr(createInfo, typ)(res)
@@ -137,18 +150,18 @@ def rankByIndegree(results, typ):
         #battles are grouped by the bigger conflict and thus do not return a year
         #therefore they need to be added seperately
         if typ == "battles":
-            entries.append(entry(int(res["date"]["value"][0:4]), info, ""))
+            entries.append(entry(int(res["date"].value[0:4]), info, ""))
 
         else:
             try:
-                entries.append(entry(int(res["date"]["value"][0:4]), info, res["thumbnail"]["value"]))
+                entries.append(entry(int(res["date"].value[0:4]), info, res["thumbnail"].value))
             except KeyError:
-                entries.append(entry(int(res["date"]["value"][0:4]), info, ""))
+                entries.append(entry(int(res["date"].value[0:4]), info, ""))
 
 
         #afterwards we check if the entry qualifies for highlighting
         threshold = calcThreshold(typ)
-        if(int(res["indegree"]["value"]) > threshold) or ("person" in typ and count < 4):
+        if(int(res["indegree"].value) > threshold) or ("person" in typ and count < 4):
             entries[count-1].setFormat("highlightedCaption")
 
         #lastly we check for anniversaries
@@ -176,28 +189,45 @@ def rankByIndegree(results, typ):
 def rankByPagerank(results, typ):
     entries = []
     count = 0
-    for res in results["results"]["bindings"]:
+    for res in results.bindings:
         inserted = False
         index = 0
         count += 1 
         info = getattr(createInfo, typ)(res)
 
-        #we search for the pagerank in our dictionary...
-        for key in pageranks:
-            if(key == ("<" + res["uri"]["value"] + ">")):
-                while (not inserted):
+        #we search for the pagerank in the pagerank graph
+        query = """PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+        PREFIX dbo:<http://dbpedia.org/ontology/>
+        PREFIX vrank:<http://purl.org/voc/vrank#>
+        SELECT ?label
+        FROM <http://dbpedia.org>
+        FROM <http://people.aifb.kit.edu/ath/#DBpedia_PageRank>
+        WHERE{	
+        ?s vrank:hasRank/vrank:rankValue ?label	
+        FILTER (?s = <http://dbpedia.org/resource/America_by_Heart>) .
+        }
+        """
+        #query = createQueryFromFile("Queries/pagerank/pagerank.txt", date)
+        query = query.replace("?search", ("<" + res["uri"].value + ">"))
+        pageranks = querying(query)
+        for key in pageranks.bindings:
+            while (not inserted):
                     #...and insert all the results ordered by their pagerank
-                    if(index >= len(entries) or entries[index].getPagerank() < pageranks[key]):
+                try:
+                    if(index >= len(entries) or entries[index].getPagerank() < key["label"].value):
                         try:
-                            e = entry(int(res["date"]["value"][0:4]), info, res["thumbnail"]["value"])
+                            e = entry(int(res["date"].value[0:4]), info, res["thumbnail"].value)
                         except KeyError:
-                            e = entry(int(res["date"]["value"][0:4]), info, "")
-                        e.setPagerank(pageranks[key])
+                            e = entry(int(res["date"].value[0:4]), info, "")
+                        e.setPagerank(key["label"].value)
                         entries.insert(index, e)
                         inserted = True
 
                     else:
                         index += 1
+                except KeyError:
+                    print("meh")
+                    break
 
     for e in entries[0:3]:
         try:
@@ -208,8 +238,6 @@ def rankByPagerank(results, typ):
             break
 
     return entries[0:numberOfResults]
-
-
 
     
 #create the section in the HTML-page with either a thumbnail or block of text
@@ -260,18 +288,8 @@ def createQueryFromFile(src, date):
 
 #create the HTML-page for a date
 def main():
-
-    #create the Date in the format "-Month-Day" to query from DBpedia
-    if(len(str(month)) == 1):
-        date = "\"-0" + str(month)
-    else:
-        date = "\"-" + str(month)
-    if(len(str(day)) == 1):
-        date += "-0" + str(day) + "\""
-    else:
-        date += "-" + str(day) + "\""
         
-    DATE = Day(day) + " of " + (Month(month).name)
+    DATE = Day(day) + " of " + months[month]
     
     print ("Creating a calender page for the ", date)
 
@@ -282,8 +300,8 @@ def main():
     births = []
     deaths = []
     for p in personTypes:
-        births.append(queryResults(createQueryFromFile("Queries/birthdate/" + p + ".txt", date), "personBorn"))
-        deaths.append(queryResults(createQueryFromFile("Queries/deathdate/" + p + ".txt", date), "personDied"))
+        births.append(queryResults(createQueryFromFile("Queries/birthDate/" + p + ".txt", date), "personBorn"))
+        deaths.append(queryResults(createQueryFromFile("Queries/deathDate/" + p + ".txt", date), "personDied"))
 
     #the birth and death dates for "other" and "untyped" are merged together
     births[4].extend(births[5])

@@ -1,0 +1,11 @@
+PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>                
+PREFIX dbo:<http://dbpedia.org/ontology/>               
+PREFIX vrank:<http://purl.org/voc/vrank#>                   
+SELECT ?label               
+FROM <http://dbpedia.org>               
+FROM <http://people.aifb.kit.edu/ath/#DBpedia_PageRank>                 
+WHERE               
+{               
+	?s vrank:hasRank/vrank:rankValue ?label                 
+	FILTER (?s = ?search) .             
+}           

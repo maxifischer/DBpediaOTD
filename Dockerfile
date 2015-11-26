@@ -6,10 +6,12 @@ RUN pip install SPARQLWrapper
 
 RUN pip install enum
 
+RUN pip install simplejson
+
 RUN mkdir /home/dbpediaotd
 
 ADD . /home/dbpediaotd
 
 WORKDIR /home/dbpediaotd
 
-CMD python DBPedia_On_This_Day.py
+RUN python DBPedia_On_This_Day.py 
