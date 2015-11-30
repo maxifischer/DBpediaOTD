@@ -45,46 +45,10 @@ class entry():
     def getPagerank(self):
         return self.pagerank
 
-#load the dictionary for pageranks
-#pageranks = {}
-#with codecs.open("pagerank_scores_en_2014.txt", "r", "utf-8") as myfile:
-#    for line in myfile:
-#        split = line.split(" ")
-#        pagerank = split[2].split("\"")[1]
-#        dicEntry = {split[0]:float(pagerank)}
-#        pageranks.update(dicEntry)
 
-#print ("Page rank loaded.")
-
-#set parameters for this execution    
-sparql_old = SPARQLWrapper("http://dbpedia.org/sparql")
+#set parameters for this execution
 sparql = SPARQLWrapper2("http://dbpedia.org/sparql")
-sparql2 = SPARQLWrapper2("http://dbpedia.org/sparql")
 numberOfResults = 15
-time = localtime()
-#change the date here
-#year = 2015
-#month_day = {1: 31, 2: 29, 3: 31, 4: 30, 5: 31, 6: 30, 7: 31, 8: 31, 9: 30, 10: 31, 11: 30, 12: 31}
-#for i in range(1, 13):
-#   month = i
-#   for j in range(1, month_day[i]):
-#       day = j
-#       date = year, month, day
-#       main(date)
-year, month, day = 2015, 11, 23 #time[0:3]
-
-#create the Date in the format "-Month-Day" to query from DBpedia
-if(len(str(month)) == 1):
-    date = "\"-0" + str(month)
-else:
-    date = "\"-" + str(month)
-if(len(str(day)) == 1):
-    date += "-0" + str(day) + "\""
-else:
-    date += "-" + str(day) + "\""
-
-anniversaries = [entry(0, "", "")]
-validAnniversaries = [1000, 500, 250, 200, 150, 100, 75, 50, 25, 10]
 
 pagerankQueries = ["movie", "writtenWork", "musicalWork"]
 
@@ -92,9 +56,15 @@ personTypes = ["artists", "athletes", "politicians", "scientists", "other", "unt
 eventQueries = ["admitted", "signed", "battles", "battles2", "beatified", "buildingEnd", "buildingStart", "canonized", "coronations", "dateRatified", "destructions", "discoveries", "dissolutions", "executed", "firstAirDate", "firstAscent", "firstFlight", "flag", "foundations", "musical", "opened", "play", "royalAssent", "shipLaunched"]
 workQueries = ["movie", "musicalWork", "writtenWork", "game"]
 
-#"Month" and "Day" transfer the date to natural text
-months = ["January", "Februar", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
-   
+anniversaries = [entry(0, "", "")]
+validAnniversaries = [1000, 500, 250, 200, 150, 100, 75, 50, 25, 10]
+
+time = localtime()
+year = time[0]
+
+
+
+
 def Day(day):
     if(str(day).endswith("1") and str(day) != "11"):
         return str(day)+"st"
@@ -287,9 +257,24 @@ def createQueryFromFile(src, date):
     return query
 
 #create the HTML-page for a date
-def main():
-        
-    DATE = Day(day) + " of " + months[month]
+def main(date):
+
+    year, month, day = date
+
+    #create the Date in the format "-Month-Day" to query from DBpedia
+    if(len(str(month)) == 1):
+        date = "\"-0" + str(month)
+    else:
+        date = "\"-" + str(month)
+    if(len(str(day)) == 1):
+        date += "-0" + str(day) + "\""
+    else:
+        date += "-" + str(day) + "\""
+
+    #"Month" and "Day" transfer the date to natural text
+    months = ["January", "Februar", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+    
+    DATE = Day(day) + " of " + months[month - 1]
     
     print ("Creating a calender page for the ", date)
 
