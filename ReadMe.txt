@@ -1,33 +1,14 @@
-Die Textdatei für die Pagerank-Dateien ist zu groß, um sie per Mail zu versenden. Daher muss diese runtergeladen werden unter:
-http://dbpedia.semanticmultimedia.org/dbpedia2014/en/pagerank_scores_en_2014.ttl.bz2 
+DBpediaOTD ist ein Programm, mit dem Ã¤hnlich der Wikipedia "On this day"-Seite fuer jeden Tag eine HTML-Seite mit den wichtigsten Ereignissen, Geburts- und Todesdaten an diesem Tag.
 
-Die Datei muss entpackt und als .txt (anstatt .ttl) im Ordner "Knowledge Mining Abgabe Gruppe 4 - DBpedia on this day\Codeabgabe\DBpedia On This Day" gespeichert werden.
-______
+Das Projekt ist als docker-Container angelegt. Um das Projekt zu laden, muss folgender Befehl ausgefÃ¼hrt werden:
+docker build -t dbpediaotd --file ./Dockerfile .
 
-Damit das Skript ausgeführt werden kann, muss das Modul SPARQLWrapper installiert sein (https://pypi.python.org/pypi/SPARQLWrapper )
+Um die Kommandozeile fÃ¼r die AusfÃ¼hrung zu Ã¶ffnen, wird folgender Befehl ausgefÃ¼hrt:
+docker run -it dbpediaotd bash
 
-1. Runterladen des eggs https://pypi.python.org/packages/2.7/S/SPARQLWrapper/SPARQLWrapper-1.6.4-py2.7.egg#md5=1ff0d9c168ed302f03901d753a1a76c5 
-2. Kopieren in den Skript-Ornder der Python-Installation (bei Standard Installation ist der Pfad C:\Python<Versionsnummer>\Scripts). 
-3. Commandline in diesen Ordner navigieren.
-4."easy_install <SPARQLWrapper-Dateiname>" ausführen. Das Modul wird nun installiert.
+Jetzt kann das Programm wie ein gewÃ¶hnliches Python-Programm auf der Kommandozeile ausgefÃ¼hrt werden mit verschiedenen Kommandozeilenoptionen. Der grundsÃ¤tzliche Aufruf ist:
+python DBpediaOTD.py
 
-Ausführen:
+Mit der Option "-open" kann eine HTML-Seite angezeigt werden. Hinter "-open" muss der Name der Datei genannt werden. Die Seiten sind nach dem Schema "DBpediaOT_<date>_<month>" abgespeichert, also bspw. "DBpediaOT_1_12" (dem 1. Dezember).
 
-1. Doppelklick auf "DBpedia On This Day.py"
-2. Das Programm braucht nun ca. 5 Minuten um die Kalenderseite für den heutigen Tag zu erstellen - das Ergebnis ist ein html-Dokument mit entsprechender Datumsbezeichnung im Ordner "Result Pages". 
-
-Sollte keine Datei entstehen, ist entweder der SPARQLWrapper nicht installiert oder DBpedia wird grade gewartet. In diesem Fall das Skript über Rechtsklick -> EDIT with IDLE öffnen und mit F5 ausführen. Dann wird eine Fehlermeldung angezeigt. 
-
-______
-
-Enthaltene Dateien:
-
-"Queries" - Alle Abfragen, nach Abschnitt sortiert
-"Result Pages" - enthält die Ergebnisseiten (hier ist auch ein Stylesheet und zwei Logos. Diese müssen vorhanden sein, damit die Seite richtig angezeigt wird)
-"pagerank_scores_en_2014.txt" - Pagerank-Werte 
-"template.txt" - HTML Vorlage 
-"createInfo.py" - Modul zur Erstellung der natürlichsprachlichen Sätze
-"mergesort.py" - Mergesort-Implementation zur Sortierung der Einträge anhand ihres Jahres
-
-
-
+AuÃŸerdem gibt es die Option "-reload", bei der die HTML-Seite eines Tages neu berechnet wird. Die Eingabe erfolgt dabei nach dem Schema "-reload <Jahr> <Monat> <Tag>", also z.B. "-reload 2015 12 1" (fÃ¼r den 1. Dezember). Wenn anstatt des Datums "all" angegeben wird, werden alle Dateien neu berechnet.
