@@ -9,14 +9,14 @@ import whole_year
 def main():
     new = 2
     try:
-        if "open" in sys.argv:
-            openind = sys.argv.index("open")
+        if "-open" in sys.argv:
+            openind = sys.argv.index("-open")
             file = sys.argv[openind + 1]
             url = "file://C:/Users/Maxi/Documents/SemanticWebJob/DBpediaOTD/Result Pages/" + file
             #brow = webbrowser.get('firefox')
             webbrowser.open(url)
-        elif "reload" in sys.argv:
-            reloadind = sys.argv.index("reload")
+        elif "-reload" in sys.argv:
+            reloadind = sys.argv.index("-reload")
             if sys.argv[reloadind + 1] == "all":
                 whole_year.start()
             year = sys.argv[reloadind + 1]
