@@ -2,6 +2,7 @@ import webbrowser
 import sys
 import DBPedia_On_This_Day
 import whole_year
+import datetime
 
 # format should be open <name of html file>
 # or reload <year, month, day>
@@ -20,7 +21,7 @@ def main():
             if sys.argv[reloadind + 1] == "all":
                 try:
                     year = int(sys.argv[reloadind + 2])
-                except TypeError:
+                except (TypeError, IndexError) as e:
                     year = datetime.datetime.now().year
                 whole_year.start(year)
             else:
