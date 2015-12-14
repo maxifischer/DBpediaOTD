@@ -240,7 +240,7 @@ def createAnni(jub):
 
 #write file in UTF-8 coding
 def writeFile(output, filename):
-    filename = "Result_Pages/DBpediaOT_" + filename + ".html"
+    filename = "Result_Pages/" + filename + ".html"
     with codecs.open(filename, 'w', 'utf-8') as targetFile:
         targetFile.write(output)
 
@@ -327,7 +327,7 @@ def main(date):
     html = html.replace("EVENTS",createSection(mergesort(generalEvents)))
     html = html.replace("PUBLICATIONS", createSection(mergesort(works)))
     
-    writeFile(html, str(month) + "_" + str(day))
+    writeFile(html, str(month) + "-" + str(day))
 
 if __name__ == "__main__":
     main()

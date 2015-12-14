@@ -18,7 +18,11 @@ def main():
         elif "-reload" in sys.argv:
             reloadind = sys.argv.index("-reload")
             if sys.argv[reloadind + 1] == "all":
-                whole_year.start()
+                try:
+                    year = int(sys.argv[reloadind + 2])
+                except TypeError:
+                    year = datetime.datetime.now().year
+                whole_year.start(year)
             else:
                 year = sys.argv[reloadind + 1]
                 month = sys.argv[reloadind + 2]
