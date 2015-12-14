@@ -6,6 +6,7 @@ import createInfo
 import re
 import codecs
 import copy
+import os
 
 #an entry is everything that is needed for an entry on the calender page:
 #the year, the information, an additional thumbnail and the pagerank for pages that do not use the indegree for ranking
@@ -142,10 +143,10 @@ def rankByIndegree(results, typ):
                 #if the birth or death of a person has its anniversary, we need to
                 #extend the information depending on whether it's a birth or death date
                 if(typ == "personBorn"):
-                    updatedInfo = str(entries[count-1].getInfo()) + ", was born."
+                    updatedInfo = entries[count-1].getInfo().encode('utf-8') + ", was born."
                     anniversaries[-1].setInfo(updatedInfo)
                 elif(typ == "personDied"):
-                    updatedInfo = str(entries[count-1].getInfo()) + ", died."
+                    updatedInfo = entries[count-1].getInfo().encode('utf-8') + ", died."
                     anniversaries[-1].setInfo(updatedInfo)
 
         #we only use as many results as specified        
@@ -234,13 +235,16 @@ def createAnni(jub):
             anni += "</ul><br>"
             anni += "%s (%s years ago):<ul>" % (str(anniversaries[i].getYear()), str(year-anniversaries[i].getYear()))
             
-        anni += "<li>%s</li>" % (anniversaries[i].getInfo())
+        anni += "<li>%s</li>" % (anniversaries[i].getInfo().decode('utf-8'))
     anni = anni[9:len(anni)]
     return anni
 
 #write file in UTF-8 coding
 def writeFile(output, filename):
     filename = "Result_Pages/" + filename + ".html"
+    #d = os.path.dirname(filename)
+    #if not os.path.exists(d):
+    #    os.makedirs(d)
     with codecs.open(filename, 'w', 'utf-8') as targetFile:
         targetFile.write(output)
 
