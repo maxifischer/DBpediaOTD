@@ -327,7 +327,7 @@ def main(date):
     html = html.replace("EVENTS",createSection(mergesort(generalEvents)))
     html = html.replace("PUBLICATIONS", createSection(mergesort(works)))
     
-    writeFile(html, "DBpediaOT_" + date + "_" + month")
+    writeFile(html, "DBpediaOT_" + month + "_" + date)
 
 if __name__ == "__main__":
     main()
